@@ -1,7 +1,13 @@
 [package]
-name = "bevy-tdn"
+name = "tdn-bevy"
 version = "0.1.0"
 edition = "2021"
+authors = ["Dev <dev@cympletech.com>"]
+readme = "README.md"
+description = "TDN plugin for Bevy game engine."
+repository = "https://github.com/cympletech/tdn-bevy"
+keywords = ["tdn", "game", "bevy"]
+license = "MIT/Apache-2.0"
 
 [features]
 default = ["ws"]
