@@ -1,0 +1,17 @@
+[package]
+name = "bevy-tdn"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["ws"]
+ws = ["async-channel", "async-tungstenite", "futures-lite", "futures-util"]
+#p2p = ["tdn"]
+
+[dependencies]
+bevy = { version = "0.12", default-features = false, features = ["multi-threaded"] }
+async-channel = { version = "2.1", optional = true }
+async-tungstenite = { version = "0.24", features = ["async-std-runtime"], optional = true } # bevy use async-io
+futures-lite = { version = "2.2", optional = true }
+futures-util = { version = "0.3", default-features = false, optional = true }
+#tdn = { version = "0.10", optional = true }
