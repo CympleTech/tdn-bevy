@@ -1,13 +1,15 @@
 use async_channel::{unbounded, Receiver, RecvError as ChannelRecvError, Sender, TryRecvError};
-use async_tungstenite::{async_std::connect_async, tungstenite::Message};
+use async_tungstenite::async_std::connect_async;
 use bevy::{
     prelude::*,
-    tasks::{IoTaskPool, Task},
+    tasks::{IoTaskPool, Task, TaskPool},
 };
 use futures_lite::future::race;
 use futures_util::{SinkExt, StreamExt};
 
 use crate::RecvError;
+
+pub use async_tungstenite::tungstenite::Message;
 
 pub struct WsClientPlugin;
 
@@ -21,7 +23,7 @@ impl Plugin for WsClientPlugin {
 pub struct WsClient;
 
 enum FutureRes {
-    Io(Option<Message>),
+    Stream(Option<Message>),
     Out(Message),
 }
 
@@ -33,37 +35,40 @@ impl WsClient {
         init_message: Option<Message>,
     ) {
         let url = init_url.to_string();
-        let (tx, io_rx) = unbounded::<Message>();
-        let (io_tx, rx) = unbounded::<Message>();
+        let (tx, out_rx) = unbounded::<Message>();
+        let (out_tx, rx) = unbounded::<Message>();
 
-        let task = IoTaskPool::get().spawn(async move {
-            if let Ok((mut stream, _)) = connect_async(url.to_string()).await {
-                if let Some(msg) = init_message {
-                    let _ = stream.send(msg).await;
-                }
+        let task = IoTaskPool::get_or_init(TaskPool::new).spawn(async move {
+            match connect_async(url.to_string()).await {
+                Ok((mut stream, _)) => {
+                    if let Some(msg) = init_message {
+                        let _ = stream.send(msg).await;
+                    }
 
-                loop {
-                    match race(
-                        async { io_rx.recv().await.map(|v| FutureRes::Out(v)) },
-                        async {
-                            stream
-                                .next()
-                                .await
-                                .map(|v| FutureRes::Io(v.ok()))
-                                .ok_or(ChannelRecvError)
-                        },
-                    )
-                    .await
-                    {
-                        Ok(FutureRes::Io(Some(v))) => {
-                            let _ = io_tx.send(v).await;
+                    loop {
+                        match race(
+                            async { out_rx.recv().await.map(|v| FutureRes::Out(v)) },
+                            async {
+                                stream
+                                    .next()
+                                    .await
+                                    .map(|v| FutureRes::Stream(v.ok()))
+                                    .ok_or(ChannelRecvError)
+                            },
+                        )
+                        .await
+                        {
+                            Ok(FutureRes::Stream(Some(v))) => {
+                                let _ = out_tx.send(v).await;
+                            }
+                            Ok(FutureRes::Out(v)) => {
+                                let _ = stream.send(v).await;
+                            }
+                            _ => break,
                         }
-                        Ok(FutureRes::Out(v)) => {
-                            let _ = stream.send(v).await;
-                        }
-                        _ => break,
                     }
                 }
+                Err(e) => error!("Websocket:{}", e),
             }
         });
 

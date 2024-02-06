@@ -20,7 +20,7 @@ fn main() {
 }
 
 fn connect_ws(mut commands: Commands, ws_client: Res<WsClient>) {
-    ws_client.connect(&mut commands, "127.0.0.1:8000");
+    ws_client.connect(&mut commands, "127.0.0.1:8000", None);
 }
 
 fn receive_message(mut commands: Commands, connections: Query<(Entity, &WsConnection)>) {

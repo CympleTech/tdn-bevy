@@ -1,6 +1,6 @@
 mod ws;
 
-pub use ws::{WsClient, WsClientPlugin, WsConnection};
+pub use ws::{Message, WsClient, WsClientPlugin, WsConnection};
 
 pub enum RecvError {
     Empty,
