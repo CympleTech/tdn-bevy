@@ -3,13 +3,14 @@ TDN plugin for Bevy game engine.
 
 ## Feature
 - Support websocket client
+- Support websocket in browser (wasm)
 - Support P2P network
 - Latest Bevy (0.12+)
 
 ## Usage
 ### Websocket client
 ```rust
-use tdn_bevy::{RecvError, WsClient, WsClientPlugin, WsConnection};
+use tdn_bevy::{RecvError, ws::{WsClient, WsClientPlugin, WsConnection}};
 
 fn main() {
     App::new()
