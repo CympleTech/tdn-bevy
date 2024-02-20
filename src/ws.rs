@@ -6,10 +6,9 @@ use bevy::{
 };
 use futures_lite::future::race;
 use futures_util::{SinkExt, StreamExt};
+use tungstenite::Message;
 
 use crate::RecvError;
-
-pub use async_tungstenite::tungstenite::Message;
 
 pub struct WsClientPlugin;
 

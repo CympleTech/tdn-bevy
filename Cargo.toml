@@ -11,13 +11,25 @@ license = "MIT/Apache-2.0"
 
 [features]
 default = ["ws"]
-ws = ["async-channel", "async-tungstenite", "futures-lite", "futures-util"]
-#p2p = ["tdn"]
+ws = ["async-channel", "async-tungstenite", "futures-lite", "futures-util", "tungstenite"]
+wasm = ["tungstenite", "crossbeam-channel", "wasm-bindgen", "js-sys", "web-sys"]
+p2p = []
 
 [dependencies]
 bevy = { version = "0.12", default-features = false, features = ["multi-threaded"] }
+tungstenite = { version = "0.21", default-features = false, optional = true }
+
+# ws
 async-channel = { version = "2.1", optional = true }
 async-tungstenite = { version = "0.24", features = ["async-std-runtime"], optional = true } # bevy use async-io
 futures-lite = { version = "2.2", optional = true }
 futures-util = { version = "0.3", default-features = false, optional = true }
+
+# p2p
 #tdn = { version = "0.10", optional = true }
+
+# wasm
+crossbeam-channel = { version = "0.5", optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+web-sys = { version = "0.3", features = ["BinaryType", "ErrorEvent", "MessageEvent", "WebSocket"], optional = true }
