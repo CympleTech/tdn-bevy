@@ -1,6 +1,6 @@
 [package]
 name = "tdn-bevy"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Dev <dev@cympletech.com>"]
 readme = "README.md"
@@ -17,7 +17,7 @@ p2p = []
 
 [dependencies]
 async-channel = "2.1"
-bevy = { version = "0.12", default-features = false, features = ["multi-threaded"] }
+bevy = { version = "0.13", default-features = false, features = ["multi-threaded"] }
 tungstenite = { version = "0.21", default-features = false, optional = true }
 
 # ws
