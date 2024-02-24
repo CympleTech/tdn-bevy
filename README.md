@@ -4,6 +4,7 @@ TDN plugin for Bevy game engine.
 ## Feature
 - Support websocket client
 - Support websocket in browser (wasm)
+- Support http client in browser (wasm)
 - Support P2P network
 - Latest Bevy (0.13+)
 

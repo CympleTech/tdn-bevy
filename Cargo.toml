@@ -12,12 +12,21 @@ license = "MIT/Apache-2.0"
 [features]
 default = ["ws"]
 ws = ["async-tungstenite", "futures-lite", "futures-util", "tungstenite"]
-wasm = ["tungstenite", "crossbeam-channel", "wasm-bindgen", "js-sys", "web-sys"]
+wasm = [
+  "tungstenite",
+  "crossbeam-channel",
+  "wasm-bindgen",
+  "wasm-bindgen-futures",
+  "serde-wasm-bindgen",
+  "js-sys",
+  "web-sys"
+]
 p2p = []
 
 [dependencies]
 async-channel = "2.1"
 bevy = { version = "0.13", default-features = false, features = ["multi-threaded"] }
+serde_json = "1.0"
 tungstenite = { version = "0.21", default-features = false, optional = true }
 
 # ws
@@ -31,5 +40,21 @@ futures-util = { version = "0.3", default-features = false, optional = true }
 # wasm
 crossbeam-channel = { version = "0.5", optional = true }
 wasm-bindgen = { version = "0.2", optional = true }
+wasm-bindgen-futures = { version = "0.4.41", optional = true }
+serde-wasm-bindgen = { version = "0.4", optional = true }
 js-sys = { version = "0.3", optional = true }
-web-sys = { version = "0.3", features = ["BinaryType", "ErrorEvent", "MessageEvent", "WebSocket"], optional = true }
+
+[dependencies.web-sys]
+version = "0.3"
+optional = true
+features = [
+  'Headers',
+  'Request',
+  'RequestInit',
+  'Response',
+  'Window',
+  "BinaryType",
+  "ErrorEvent",
+  "MessageEvent",
+  "WebSocket"
+]
