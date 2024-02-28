@@ -9,7 +9,7 @@ TDN plugin for Bevy game engine.
 - Latest Bevy (0.13+)
 
 ## Usage
-```tdn-bevy = "0.1.1"```
+```tdn-bevy = "0.1.2"```
 
 ### Websocket client
 ```rust
